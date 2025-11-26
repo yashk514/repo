@@ -101,10 +101,116 @@ app.delete('/users/:id' , async(req , res) =>{
 
 })
 
-
-
-
-
-
-
 app.listen(PORT , ()=> console.log(`server running on http://localhost:${PORT}`));
+
+
+
+import React, { useState } from 'react';
+
+function AddUser() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [age, setAge] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const user = { name, email, age };
+
+    await fetch('http://localhost:5000/users', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(user)
+    });
+
+    alert("User saved!");
+  };
+
+  return (
+    <div>
+      <h2>Add User</h2>
+
+      <form onSubmit={handleSubmit}>
+        <input 
+          placeholder="Name" 
+          value={name} 
+          onChange={(e) => setName(e.target.value)} 
+        /><br/><br/>
+
+        <input 
+          placeholder="Email" 
+          value={email} 
+          onChange={(e) => setEmail(e.target.value)} 
+        /><br/><br/>
+
+        <input 
+          placeholder="Age" 
+          value={age} 
+          onChange={(e) => setAge(e.target.value)} 
+        /><br/><br/>
+
+        <button type="submit">Save</button>
+      </form>
+    </div>
+  );
+}
+
+export default AddUser;
+
+
+
+
+
+import React, { useState } from "react";
+
+function UpdateUser() {
+  const [id, setId] = useState("");     // user ID to update
+  const [name, setName] = useState(""); // new name
+  const [email, setEmail] = useState(""); // new email
+  const [age, setAge] = useState("");   // new age
+
+  const updateUser = async () => {
+    const updatedData = { name, email, age };
+
+    const res = await fetch(`http://localhost:5000/users/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData),
+    });
+
+    const data = await res.json();
+    console.log(data);
+    alert("User updated!");
+  };
+
+  return (
+    <div>
+      <h2>Update User</h2>
+
+      <input
+        placeholder="User ID"
+        onChange={(e) => setId(e.target.value)}
+      /><br/><br/>
+
+      <input
+        placeholder="New Name"
+        onChange={(e) => setName(e.target.value)}
+      /><br/><br/>
+
+      <input
+        placeholder="New Email"
+        onChange={(e) => setEmail(e.target.value)}
+      /><br/><br/>
+
+      <input
+        placeholder="New Age"
+        onChange={(e) => setAge(e.target.value)}
+      /><br/><br/>
+
+      <button onClick={updateUser}>Update User</button>
+    </div>
+  );
+}
+
+export default UpdateUser;
+
